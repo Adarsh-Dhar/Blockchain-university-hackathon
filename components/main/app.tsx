@@ -11,8 +11,14 @@ const App = () => {
       <Button 
         onClick={async () => {
             try{
-                const response = await axios.get('https://tokens.jup.ag/tokens_with_markets');
+                console.log("1")
+                const response = await axios.get('http://localhost:3000/api/tokens');
+                if(!response) {
+                    console.log("no resp")
+                }
                 console.log("response", response.data)
+                console.log("2")
+
             }catch(error) {
                 console.error(error)
             }
