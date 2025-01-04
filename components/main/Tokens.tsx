@@ -15,7 +15,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
-
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -35,25 +34,43 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import useUriToImage from "./uriToImg"
 
 export type Payment = {
   id: string
-  amount: number
-  name: "pending" | "processing" | "success" | "failed"
+  logoURI: string
+  name: string
   address: string
+  symbol: string
 }
 
+// Image cell component to handle image loading
+const ImageCell = ({ uri }: { uri: string }) => {
+  const { imageUrl, loading, error } = useUriToImage(uri);
+
+  if (loading) return <div className="w-8 h-8 animate-pulse bg-gray-200 rounded-full" />;
+  if (error) return <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">!</div>;
+  
+  return (
+    <img 
+      src={imageUrl ?? ''} 
+      alt="Token logo" 
+      className="w-8 h-8 rounded-full object-cover"
+    />
+  );
+};
+
 const columns: ColumnDef<Payment>[] = [
-    {
-        accessorKey: "logoURI",
-        header: "logoURI",
-        cell: ({ row }) => (
-          <div className="capitalize">{row.getValue("logoURI")}</div>
-        ),
-      },
+  {
+    accessorKey: "logoURI",
+    header: "Logo",
+    cell: ({ row }) => (
+      <ImageCell uri={row.getValue("logoURI")} />
+    ),
+  },
   {
     accessorKey: "name",
-    header: "name",
+    header: "Name",
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("name")}</div>
     ),
@@ -66,7 +83,7 @@ const columns: ColumnDef<Payment>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          address
+          Address
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
@@ -81,26 +98,13 @@ const columns: ColumnDef<Payment>[] = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          symbol
+          Symbol
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
     cell: ({ row }) => <div className="lowercase">{row.getValue("symbol")}</div>,
   },
-//   {
-//     accessorKey: "amount",
-//     header: () => <div className="text-right">Amount</div>,
-//     cell: ({ row }) => {
-//       const amount = parseFloat(row.getValue("amount"))
-//       const formatted = new Intl.NumberFormat("en-US", {
-//         style: "currency",
-//         currency: "USD",
-//       }).format(amount)
-
-//       return <div className="text-right font-medium">{formatted}</div>
-//     },
-//   },
   {
     id: "actions",
     enableHiding: false,
@@ -198,7 +202,7 @@ export default function Tokens() {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter addresss..."
+          placeholder="Filter address..."
           value={(table.getColumn("address")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("address")?.setFilterValue(event.target.value)
