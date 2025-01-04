@@ -17,6 +17,8 @@ const App = () => {
                     console.log("no resp")
                 }
                 console.log("response", response.data)
+                console.log("response 1", response.data[0])
+
                 console.log("2")
 
             }catch(error) {
