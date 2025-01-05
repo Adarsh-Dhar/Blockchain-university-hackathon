@@ -1,11 +1,12 @@
-import App from "@/components/main/app";
-import  Tokens  from "@/components/main/Tokens";
+import App from "@/components/List/app";
+// import  Tokens  from "@/components/List/Tokens";
+import { GraphUI } from "@/components/Graph/ui";
 
 export default function Home() {
   return (
    <div>
       <App />
-      <Tokens />
+      <GraphUI />
    </div>
   );
 }
