@@ -6,6 +6,8 @@ export async function GET() {
     const response = await axios.get('https://tokens.jup.ag/tokens?tags=verified');
     return NextResponse.json(response.data);
   } catch (error) {
+    console.error(error)
+
     return NextResponse.json({ error: 'Failed to fetch tokens' }, { status: 500 });
   }
 }
