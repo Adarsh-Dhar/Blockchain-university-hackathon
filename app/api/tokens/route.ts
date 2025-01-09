@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export async function GET() {
   try {
-    const response = await axios.get('https://tokens.jup.ag/tokens?tags=verified');
+    const response = await axios.get('https://tokens.jup.ag/tokens?tags=unknown');
     return NextResponse.json(response.data);
   } catch (error) {
     console.error(error)

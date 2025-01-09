@@ -106,6 +106,21 @@ const columns: ColumnDef<Payment>[] = [
     cell: ({ row }) => <div className="lowercase">{row.getValue("symbol")}</div>,
   },
   {
+    accessorKey: "created_at",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Symbol
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("created_at")}</div>,
+  },
+  {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
@@ -154,7 +169,18 @@ export default function Tokens() {
     try {
       setLoading(true)
       const response = await axios.get('http://localhost:3000/api/tokens')
-      setData(response.data)
+      const tokens: Payment[] = response.data
+  
+      // Get the current time and calculate the cutoff for 1 hour ago
+      const now = new Date()
+      const deadline = new Date(now.getTime() - 15 * 60 * 1000)
+  
+      // Filter and sort the tokens
+      const filteredTokens = tokens
+        .filter((token) => new Date(token.created_at) > deadline)
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+  
+      setData(filteredTokens)
       setError(null)
     } catch (err) {
       setError('Failed to fetch data')

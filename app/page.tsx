@@ -1,6 +1,6 @@
 "use client"
 import App from "@/components/List/app";
-// import  Tokens  from "@/components/List/Tokens";
+import  Tokens  from "@/components/List/Tokens";
 import { GraphUI } from "@/components/Graph/ui";
 
 import TweetSearch from "@/components/twitter/TweetSearch";
@@ -14,7 +14,8 @@ export default function Home() {
         handleTwitterActions()
       }}>Twitter</Button> */}
       {/* <TwitterUI /> */}
-      <TweetSearch />
+      {/* <TweetSearch /> */}
+      <Tokens />
    </div>
   );
 }
